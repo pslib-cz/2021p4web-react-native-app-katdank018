@@ -5,7 +5,7 @@ import { StyleSheet, Image, Text, Button, View } from "react-native";
 import { api } from "../configuration/spotifyConfig";
 import AlbumCard from "./AlbumCard";
 
-export const ArtistPage = ({ route }) => {
+export const ArtistPage = ({ route, navigation }) => {
   console.log(route.params.id);
   const [accessToken, setAccessToken] = useState();
   const [saved, setSaved] = useState();
@@ -50,16 +50,20 @@ export const ArtistPage = ({ route }) => {
     });
   }, [accessToken, savedCurrent, setArtist]);
 
-  const SaveArtist = () => {
+  const SaveArtist = async () => {
     const artist = {
       id: route.params.id,
       albums: [],
     };
     saved.artists.push(artist);
-    SaveToStorage();
+    try {
+      await AsyncStorage.setItem("saved", JSON.stringify(saved));
+    } catch (e) {
+      console.log("Error", e);
+    }
   };
+
   const RemoveArtist = async () => {
-    // saved.pop(saved.artists.filter((x) => x.id === route.params.id));
     setSaved({
       artists: saved.artists.filter((x) => x.id !== route.params.id),
     });
@@ -70,14 +74,6 @@ export const ArtistPage = ({ route }) => {
           artists: saved.artists.filter((x) => x.id !== route.params.id),
         })
       );
-    } catch (e) {
-      console.log("Error", e);
-    }
-  };
-
-  const SaveToStorage = async () => {
-    try {
-      await AsyncStorage.setItem("saved", JSON.stringify(saved));
     } catch (e) {
       console.log("Error", e);
     }
