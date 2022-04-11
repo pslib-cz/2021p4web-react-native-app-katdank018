@@ -1,10 +1,10 @@
 import axios from "axios";
-import { useRef, useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { StyleSheet, Text, TextInput, View } from "react-native";
 import { api } from "../configuration/spotifyConfig";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-export const MainPage = () => {
+export const MainPage = ({ navigation }) => {
   const [searchText, setSearchText] = useState("");
   const [accessToken, setAccessToken] = useState(null);
   const [results, setResults] = useState([]);
@@ -22,9 +22,6 @@ export const MainPage = () => {
   }, [accessToken]);
 
   useEffect(() => {
-    // console.log(accessToken);
-    // console.log(searchText);
-    // console.log(api + "search?q=" + searchText + "&type=artist&limit=3");
     if (searchText !== "") {
       axios({
         method: "get",
@@ -33,9 +30,10 @@ export const MainPage = () => {
           Authorization: "Bearer " + accessToken,
         },
       }).then(function (response) {
-        setResults(response.data.artists.items.map((a) => a.name));
+        setResults(response.data.artists.items);
       });
-      console.log(results);
+    } else {
+      setResults([]);
     }
   }, [searchText]);
 
@@ -47,6 +45,15 @@ export const MainPage = () => {
         value={searchText}
         onChangeText={(text) => setSearchText(text)}
       ></TextInput>
+      {results.map((item, index) => (
+        <Text
+          id={item.id}
+          key={index}
+          onPress={() => navigation.navigate("Umělec", { id: item.id })}
+        >
+          {item.name}
+        </Text>
+      ))}
     </View>
   );
 };
