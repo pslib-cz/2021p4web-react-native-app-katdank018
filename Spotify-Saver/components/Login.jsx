@@ -27,7 +27,6 @@ export const Login = ({ navigation }) => {
     try {
       await AsyncStorage.setItem("access_token", token);
       const data = await AsyncStorage.getItem("artists");
-      console.log(data);
       if (data === null) {
         console.log("Creating...");
         await AsyncStorage.setItem("artists", JSON.stringify(artists));
@@ -36,10 +35,6 @@ export const Login = ({ navigation }) => {
       console.log("Error", e);
     }
   };
-
-  const Reset = async () => {
-    await AsyncStorage.removeItem("artists");
-  }
 
   useEffect(() => {
     if (response?.type === "success") {
@@ -51,7 +46,6 @@ export const Login = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <Button onPress={() => promptAsync()} title="Přihlásit se" />
-      <Button onPress={() => Reset()} title="Reset" />
     </View>
   );
 };

@@ -24,9 +24,8 @@ export const ArtistPage = ({ route, navigation }) => {
     });
 
     AsyncStorage.getItem("artists").then((res) => {
-      setSavedCurrent(JSON.parse(res).find(
-        (x) => x.id === route.params.id))
-    })
+      setSavedCurrent(JSON.parse(res).find((x) => x.id === route.params.id));
+    });
 
     //Artist
     axios({
@@ -35,9 +34,13 @@ export const ArtistPage = ({ route, navigation }) => {
       headers: {
         Authorization: "Bearer " + accessToken,
       },
-    }).then(function (response) {
-      setArtist(response.data);
-    });
+    })
+      .then(function (response) {
+        setArtist(response.data);
+      })
+      .catch((e) => {
+        console.log(e);
+      });
 
     //Albums
     axios({
@@ -46,10 +49,19 @@ export const ArtistPage = ({ route, navigation }) => {
       headers: {
         Authorization: "Bearer " + accessToken,
       },
-    }).then(function (response) {
-      setAlbums(response.data.items);
-    });
-  }, [accessToken, setArtist]);
+    })
+      .then(function (response) {
+        const unique = [
+          ...new Map(
+            response.data.items.map((item) => [item["name"], item])
+          ).values(),
+        ];
+        setAlbums(unique);
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+  }, [accessToken]);
 
   useEffect(() => {}, [savedCurrent]);
 

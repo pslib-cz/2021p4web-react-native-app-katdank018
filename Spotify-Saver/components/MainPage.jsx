@@ -36,7 +36,6 @@ export const MainPage = ({ navigation }) => {
   useEffect(() => {
     AsyncStorage.getItem("access_token").then((res) => {
       setAccessToken(res);
-      console.log(accessToken);
     });
 
     AsyncStorage.getItem("artists").then((res) => {
@@ -46,6 +45,7 @@ export const MainPage = ({ navigation }) => {
         } else {
           setArtists(JSON.parse(res));
         }
+
         //Kontrola neuložených alb každého sledovaného umělce
         JSON.parse(res).forEach((x) => {
           axios({
@@ -69,6 +69,7 @@ export const MainPage = ({ navigation }) => {
         });
       }
     });
+
     //Pokud nějaká nová přidat umělce do proměnné
     if (newAlbums.length > 0) {
       axios({
@@ -90,7 +91,12 @@ export const MainPage = ({ navigation }) => {
         });
       });
     }
-  }, [newAlbums, isFocused, accessToken]);
+  }, [newAlbums, accessToken]);
+
+  useEffect(() => {
+    setNewAlbums([]);
+    setNewArtists([]);
+  }, [isFocused]);
 
   return (
     <ScrollView style={styles.container}>
@@ -119,6 +125,7 @@ export const MainPage = ({ navigation }) => {
           {artists?.map((item, index) => (
             <ArtistCard key={index} item={item} navigation={navigation} />
           ))}
+          <ArtistCard key="AddNew" navigation={navigation} />
         </View>
       </View>
       {/* Nové */}
