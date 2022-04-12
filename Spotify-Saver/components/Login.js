@@ -10,18 +10,15 @@ const discovery = {
 };
 
 export const Login = ({ navigation }) => {
-  const saved = {
-    artists: [
-      // {
-      //   id: null,
-      //   albums: [
-      //     {
-      //       id: null,
-      //     },
-      //   ],
-      // },
-    ],
-  };
+  const artists = [];
+  // {
+  //   id: null,
+  //   albums: [
+  //     {
+  //       id: null,
+  //     },
+  //   ],
+  // },
 
   const [request, response, promptAsync] = useAuthRequest(
     {
@@ -37,10 +34,11 @@ export const Login = ({ navigation }) => {
   const SaveAccessToken = async (token) => {
     try {
       await AsyncStorage.setItem("access_token", token);
-      const data = await AsyncStorage.getItem("saved");
+      const data = await AsyncStorage.getItem("artists");
       console.log(data);
       if (data === null) {
-        await AsyncStorage.setItem("saved", JSON.stringify(saved));
+        console.log("Creating...");
+        await AsyncStorage.setItem("artists", JSON.stringify(artists));
       }
     } catch (e) {
       console.log("Error", e);

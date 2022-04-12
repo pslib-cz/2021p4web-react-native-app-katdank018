@@ -8,24 +8,23 @@ import AlbumCard from "./AlbumCard";
 export const ArtistPage = ({ route, navigation }) => {
   console.log(route.params.id);
   const [accessToken, setAccessToken] = useState();
-  const [saved, setSaved] = useState();
+  const [storageData, setStorageData] = useState();
   const [artist, setArtist] = useState();
   const [albums, setAlbums] = useState([]);
   const [savedCurrent, setSavedCurrent] = useState();
 
   useEffect(() => {
-    const GetAccessToken = async () => {
-      try {
-        setAccessToken(await AsyncStorage.getItem("access_token"));
-        AsyncStorage.getItem("saved").then((value) =>
-          setSaved(JSON.parse(value))
-        );
-        setSavedCurrent(saved.artists.find((x) => x.id === route.params.id));
-      } catch (e) {
-        console.log("Error", e);
-      }
-    };
-    GetAccessToken();
+    try {
+      AsyncStorage.getItem("access_token").then((value) =>
+        setAccessToken(value)
+      );
+      AsyncStorage.getItem("artists").then((value) =>
+        setStorageData(JSON.parse(value))
+      );
+      setSavedCurrent(storageData.find((x) => x.id === route.params.id));
+    } catch (e) {
+      console.log("Error", e);
+    }
 
     //Artist
     axios({
@@ -48,38 +47,35 @@ export const ArtistPage = ({ route, navigation }) => {
     }).then(function (response) {
       setAlbums(response.data.items);
     });
-  }, [accessToken, savedCurrent, setArtist]);
 
-  const SaveArtist = async () => {
+  }, [savedCurrent,accessToken, setArtist]);
+
+  const SaveArtist = () => {
     const artist = {
       id: route.params.id,
       albums: [],
     };
-    saved.artists.push(artist);
+    setStorageData(storageData.push(artist));
     try {
-      await AsyncStorage.setItem("saved", JSON.stringify(saved));
+      AsyncStorage.setItem("artists", JSON.stringify(storageData));
     } catch (e) {
       console.log("Error", e);
     }
   };
 
-  const RemoveArtist = async () => {
-    setSaved({
-      artists: saved.artists.filter((x) => x.id !== route.params.id),
-    });
+  const RemoveArtist = () => {
+    setStorageData(storageData.filter((x) => x.id !== route.params.id));
     try {
-      await AsyncStorage.setItem(
-        "saved",
-        JSON.stringify({
-          artists: saved.artists.filter((x) => x.id !== route.params.id),
-        })
+      AsyncStorage.setItem(
+        "artists",
+        JSON.stringify(storageData.filter((x) => x.id !== route.params.id))
       );
     } catch (e) {
       console.log("Error", e);
     }
   };
 
-  if (artist && saved) {
+  if (artist && storageData) {
     return (
       <View style={styles.container}>
         <Image
