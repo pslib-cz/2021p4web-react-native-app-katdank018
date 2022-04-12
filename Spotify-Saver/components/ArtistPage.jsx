@@ -1,7 +1,14 @@
 import axios from "axios";
 import { useState, useEffect } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { StyleSheet, Image, Text, Button,ScrollView, View } from "react-native";
+import {
+  StyleSheet,
+  Image,
+  Text,
+  Button,
+  ScrollView,
+  View,
+} from "react-native";
 import { api } from "../configuration/spotifyConfig";
 import AlbumCard from "./AlbumCard";
 
@@ -12,15 +19,14 @@ export const ArtistPage = ({ route, navigation }) => {
   const [savedCurrent, setSavedCurrent] = useState();
 
   useEffect(() => {
-    const GetStorageData = async () => {
-      setAccessToken(await AsyncStorage.getItem("access_token"));
-      setSavedCurrent(
-        JSON.parse(await AsyncStorage.getItem("artists")).find(
-          (x) => x.id === route.params.id
-        )
-      );
-    };
-    GetStorageData();
+    AsyncStorage.getItem("access_token").then((res) => {
+      setAccessToken(res);
+    });
+
+    AsyncStorage.getItem("artists").then((res) => {
+      setSavedCurrent(JSON.parse(res).find(
+        (x) => x.id === route.params.id))
+    })
 
     //Artist
     axios({

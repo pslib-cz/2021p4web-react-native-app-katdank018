@@ -16,95 +16,6 @@ export const MainPage = ({ navigation }) => {
   const isFocused = useIsFocused();
 
   useEffect(() => {
-    const GetDataFromStorage = async () => {
-      try {
-        setAccessToken(await AsyncStorage.getItem("access_token"));
-      } catch (e) {
-        console.log("Error", e);
-      }
-
-      const storage = JSON.parse(await AsyncStorage.getItem("artists"));
-      if (storage?.length > 0) {
-        setArtists(storage.slice(0, 10));
-      } else {
-        setArtists(storage);
-      }
-
-      storage.forEach((x) => {
-        axios({
-          method: "get",
-          url: api + "artists/" + x.id + "/albums?market=CZ",
-          headers: {
-            Authorization: "Bearer " + accessToken,
-          },
-        }).then(function (response) {
-          if (
-            newAlbums.indexOf(x.id) === -1 &&
-            response.data.items //ids
-              .map((x) => x.id)
-              .filter(function (item) {
-                return !x.albums.includes(item);
-              }).length > 0
-          ) {
-            setNewAlbums([...newAlbums, x.id]);
-          }
-          // response.data.items //ids
-          //   .map((x) => x.id)
-          //   .filter(function (item) {
-          //     return !x.albums.includes(item);
-          //   })
-          // .forEach((y) => {
-          // response.data.items
-          //   .filter((c) => c.id === y)
-          // .forEach((z) => {
-          //   if (
-          //     newAlbums.findIndex(
-          //       (a) => a.name === z.name && a.artist === z.artists[0].name
-          //     ) === -1
-          //   ) {
-          //     setNewAlbums((arr) => [
-          //       ...arr,
-          //       {
-          //         img: z.images[2].url,
-          //         name: z.name,
-          //         artist: z.artists[0].name,
-          //       },
-          //     ]);
-          //   }
-          // });
-        });
-      });
-
-      axios({
-        method: "get",
-        url: api + "artists?ids=" + newAlbums.join(),
-        headers: {
-          Authorization: "Bearer " + accessToken,
-        },
-      })
-        .then(function (response) {
-          response.data.artists.forEach((x) => {
-            if (!newArtists.some((o) => o.id === x.id)) {
-              setNewArtists([
-                ...newArtists,
-                {
-                  id: x.id,
-                  name: x.name,
-                  img: x.images[2].url,
-                },
-              ]);
-            }
-          });
-        })
-        .catch(function (error) {
-          console.log(error);
-        });
-    };
-
-    GetDataFromStorage();
-  }, [newAlbums, isFocused, accessToken]);
-
-  useEffect(() => {
     if (searchText !== "") {
       axios({
         method: "get",
@@ -121,7 +32,63 @@ export const MainPage = ({ navigation }) => {
   }, [searchText]);
 
   useEffect(() => {
-  }, [newArtists]);
+    AsyncStorage.getItem("access_token").then((res) => {
+      setAccessToken(res);
+      console.log(accessToken);
+    });
+
+    AsyncStorage.getItem("artists").then((res) => {
+      if (JSON.parse(res)) {
+        if (JSON.parse(res).length > 0) {
+          setArtists(JSON.parse(res).slice(0, 10));
+        } else {
+          setArtists(JSON.parse(res));
+        }
+
+        JSON.parse(res).forEach((x) => {
+          axios({
+            method: "get",
+            url: api + "artists/" + x.id + "/albums?market=CZ",
+            headers: {
+              Authorization: "Basic " + accessToken,
+            },
+          }).then(function (response) {
+            if (
+              newAlbums.indexOf(x.id) === -1 &&
+              response.data.items //ids
+                .map((x) => x.id)
+                .filter(function (item) {
+                  return !x.albums.includes(item);
+                }).length > 0
+            ) {
+              setNewAlbums([...newAlbums, x.id]);
+            }
+          });
+        });
+      }
+    });
+
+    if (newAlbums.length > 0) {
+      axios({
+        method: "get",
+        url: api + "artists?ids=" + newAlbums.join(),
+        headers: {
+          Authorization: "Bearer " + accessToken,
+        },
+      }).then(function (response) {
+        response.data.artists.forEach((x) => {
+          const obj = {
+            id: x.id,
+            name: x.name,
+            img: x.images[2].url,
+          };
+          if (newArtists.some((o) => o.id === x.id) !== true) {
+            setNewArtists([...newArtists, obj]);
+          }
+        });
+      });
+    }
+  }, [newAlbums, isFocused, accessToken]);
 
   return (
     <ScrollView style={styles.container}>
@@ -148,7 +115,7 @@ export const MainPage = ({ navigation }) => {
         <Text>Uložené</Text>
         <View>
           {artists?.map((item, index) => (
-            <ArtistCard key={index} item={item} />
+            <ArtistCard key={index} item={item} navigation={navigation} />
           ))}
         </View>
       </View>
@@ -157,7 +124,7 @@ export const MainPage = ({ navigation }) => {
         <Text>Nová alba</Text>
         <View>
           {newArtists?.map((item, index) => (
-            <ArtistCard key={index} item={item} />
+            <ArtistCard key={index} item={item} navigation={navigation} />
           ))}
         </View>
       </View>
