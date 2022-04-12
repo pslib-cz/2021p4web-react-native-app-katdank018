@@ -1,12 +1,11 @@
 import axios from "axios";
 import { useState, useEffect } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { StyleSheet, Image, Text, Button, View } from "react-native";
+import { StyleSheet, Image, Text, Button,ScrollView, View } from "react-native";
 import { api } from "../configuration/spotifyConfig";
 import AlbumCard from "./AlbumCard";
 
 export const ArtistPage = ({ route, navigation }) => {
-  console.log(route.params.id);
   const [accessToken, setAccessToken] = useState();
   const [artist, setArtist] = useState();
   const [albums, setAlbums] = useState([]);
@@ -46,8 +45,7 @@ export const ArtistPage = ({ route, navigation }) => {
     });
   }, [accessToken, setArtist]);
 
-  useEffect(() => {
-  }, [savedCurrent]);
+  useEffect(() => {}, [savedCurrent]);
 
   const GetSavedCurrent = async () => {
     setSavedCurrent(
@@ -55,16 +53,17 @@ export const ArtistPage = ({ route, navigation }) => {
         (x) => x.id === route.params.id
       )
     );
-    console.log("nová data");
   };
 
   const SaveArtist = async () => {
-    const artist = {
+    const savingArtist = {
       id: route.params.id,
+      name: artist.name,
+      img: artist.images[2].url,
       albums: [],
     };
     const data = JSON.parse(await AsyncStorage.getItem("artists"));
-    data.push(artist);
+    data.push(savingArtist);
     await AsyncStorage.setItem("artists", JSON.stringify(data));
     GetSavedCurrent();
   };
@@ -81,13 +80,9 @@ export const ArtistPage = ({ route, navigation }) => {
     GetSavedCurrent();
   };
 
-  AsyncStorage.getItem("artists").then((v) => {
-    console.log(JSON.parse(v));
-  });
-
   if (artist) {
     return (
-      <View style={styles.container}>
+      <ScrollView style={styles.container}>
         <Image
           source={{ uri: artist.images[1].url }}
           style={{ width: 320, height: 320 }}
@@ -101,10 +96,15 @@ export const ArtistPage = ({ route, navigation }) => {
 
         <View>
           {albums.map((item, index) => (
-            <AlbumCard key={index} item={item} saved={savedCurrent} refresh={GetSavedCurrent}></AlbumCard>
+            <AlbumCard
+              key={index}
+              item={item}
+              saved={savedCurrent}
+              refresh={GetSavedCurrent}
+            />
           ))}
         </View>
-      </View>
+      </ScrollView>
     );
   } else {
     return <View></View>;
