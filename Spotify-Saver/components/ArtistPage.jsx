@@ -8,23 +8,20 @@ import AlbumCard from "./AlbumCard";
 export const ArtistPage = ({ route, navigation }) => {
   console.log(route.params.id);
   const [accessToken, setAccessToken] = useState();
-  const [storageData, setStorageData] = useState();
   const [artist, setArtist] = useState();
   const [albums, setAlbums] = useState([]);
   const [savedCurrent, setSavedCurrent] = useState();
 
   useEffect(() => {
-    try {
-      AsyncStorage.getItem("access_token").then((value) =>
-        setAccessToken(value)
+    const GetStorageData = async () => {
+      setAccessToken(await AsyncStorage.getItem("access_token"));
+      setSavedCurrent(
+        JSON.parse(await AsyncStorage.getItem("artists")).find(
+          (x) => x.id === route.params.id
+        )
       );
-      AsyncStorage.getItem("artists").then((value) =>
-        setStorageData(JSON.parse(value))
-      );
-      setSavedCurrent(storageData.find((x) => x.id === route.params.id));
-    } catch (e) {
-      console.log("Error", e);
-    }
+    };
+    GetStorageData();
 
     //Artist
     axios({
@@ -47,35 +44,48 @@ export const ArtistPage = ({ route, navigation }) => {
     }).then(function (response) {
       setAlbums(response.data.items);
     });
+  }, [accessToken, setArtist]);
 
-  }, [savedCurrent,accessToken, setArtist]);
+  useEffect(() => {
+  }, [savedCurrent]);
 
-  const SaveArtist = () => {
+  const GetSavedCurrent = async () => {
+    setSavedCurrent(
+      JSON.parse(await AsyncStorage.getItem("artists")).find(
+        (x) => x.id === route.params.id
+      )
+    );
+    console.log("nová data");
+  };
+
+  const SaveArtist = async () => {
     const artist = {
       id: route.params.id,
       albums: [],
     };
-    setStorageData(storageData.push(artist));
-    try {
-      AsyncStorage.setItem("artists", JSON.stringify(storageData));
-    } catch (e) {
-      console.log("Error", e);
-    }
+    const data = JSON.parse(await AsyncStorage.getItem("artists"));
+    data.push(artist);
+    await AsyncStorage.setItem("artists", JSON.stringify(data));
+    GetSavedCurrent();
   };
 
-  const RemoveArtist = () => {
-    setStorageData(storageData.filter((x) => x.id !== route.params.id));
-    try {
-      AsyncStorage.setItem(
-        "artists",
-        JSON.stringify(storageData.filter((x) => x.id !== route.params.id))
-      );
-    } catch (e) {
-      console.log("Error", e);
-    }
+  const RemoveArtist = async () => {
+    await AsyncStorage.setItem(
+      "artists",
+      JSON.stringify(
+        JSON.parse(await AsyncStorage.getItem("artists")).filter(
+          (x) => x.id !== route.params.id
+        )
+      )
+    );
+    GetSavedCurrent();
   };
 
-  if (artist && storageData) {
+  AsyncStorage.getItem("artists").then((v) => {
+    console.log(JSON.parse(v));
+  });
+
+  if (artist) {
     return (
       <View style={styles.container}>
         <Image
@@ -83,7 +93,7 @@ export const ArtistPage = ({ route, navigation }) => {
           style={{ width: 320, height: 320 }}
         />
         <Text>{artist.name}</Text>
-        {savedCurrent !== undefined ? (
+        {savedCurrent ? (
           <Button onPress={() => RemoveArtist()} title="Přestat sledovat" />
         ) : (
           <Button onPress={() => SaveArtist()} title="Sledovat" />
@@ -91,7 +101,7 @@ export const ArtistPage = ({ route, navigation }) => {
 
         <View>
           {albums.map((item, index) => (
-            <AlbumCard key={index} item={item}></AlbumCard>
+            <AlbumCard key={index} item={item} saved={savedCurrent} refresh={GetSavedCurrent}></AlbumCard>
           ))}
         </View>
       </View>

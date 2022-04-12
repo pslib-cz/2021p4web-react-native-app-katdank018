@@ -45,6 +45,10 @@ export const Login = ({ navigation }) => {
     }
   };
 
+  const Reset = async () => {
+    await AsyncStorage.removeItem("artists");
+  }
+
   useEffect(() => {
     if (response?.type === "success") {
       SaveAccessToken(response.params.access_token);
@@ -55,6 +59,7 @@ export const Login = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <Button onPress={() => promptAsync()} title="Přihlásit se" />
+      <Button onPress={() => Reset()} title="Reset" />
     </View>
   );
 };
