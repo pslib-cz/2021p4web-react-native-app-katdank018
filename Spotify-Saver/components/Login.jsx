@@ -11,14 +11,6 @@ const discovery = {
 
 export const Login = ({ navigation }) => {
   const artists = [];
-  // {
-  //   id: null,
-  //   albums: [
-  //     {
-  //       id: null,
-  //     },
-  //   ],
-  // },
 
   const [request, response, promptAsync] = useAuthRequest(
     {

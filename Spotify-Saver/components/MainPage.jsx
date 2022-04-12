@@ -15,6 +15,7 @@ export const MainPage = ({ navigation }) => {
   const [newArtists, setNewArtists] = useState([]);
   const isFocused = useIsFocused();
 
+  //Výsledky vyhledávání
   useEffect(() => {
     if (searchText !== "") {
       axios({
@@ -31,6 +32,7 @@ export const MainPage = ({ navigation }) => {
     }
   }, [searchText]);
 
+  //Výpis umělců
   useEffect(() => {
     AsyncStorage.getItem("access_token").then((res) => {
       setAccessToken(res);
@@ -44,7 +46,7 @@ export const MainPage = ({ navigation }) => {
         } else {
           setArtists(JSON.parse(res));
         }
-
+        //Kontrola neuložených alb každého sledovaného umělce
         JSON.parse(res).forEach((x) => {
           axios({
             method: "get",
@@ -67,7 +69,7 @@ export const MainPage = ({ navigation }) => {
         });
       }
     });
-
+    //Pokud nějaká nová přidat umělce do proměnné
     if (newAlbums.length > 0) {
       axios({
         method: "get",

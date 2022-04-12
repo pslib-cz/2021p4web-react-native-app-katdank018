@@ -1,9 +1,6 @@
 import { TouchableHighlight, Text, Image, View } from "react-native";
 
 export const ArtistCard = ({ item, navigation }) => {
-  const Redirect = () => {
-    console.log(item.name);
-  };
   return (
     <TouchableHighlight
       testID={item.id}
