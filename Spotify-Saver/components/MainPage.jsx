@@ -12,8 +12,8 @@ export const MainPage = ({ navigation }) => {
   const [results, setResults] = useState([]);
   const [artists, setArtists] = useState([]);
   const [newAlbums, setNewAlbums] = useState([]);
-  const [newArtists, setNewArtists] = useState([]);
   const isFocused = useIsFocused();
+  const [gotAlbums, setGotAlbums] = useState(false);
 
   //Výsledky vyhledávání
   useEffect(() => {
@@ -24,11 +24,13 @@ export const MainPage = ({ navigation }) => {
         headers: {
           Authorization: "Bearer " + accessToken,
         },
-      }).then(function (response) {
-        setResults(response.data.artists.items);
-      }).catch((e) => {
-        console.log(e);
-      });
+      })
+        .then(function (response) {
+          setResults(response.data.artists.items);
+        })
+        .catch((e) => {
+          console.log(e);
+        });
     } else {
       setResults([]);
     }
@@ -36,72 +38,59 @@ export const MainPage = ({ navigation }) => {
 
   //Výpis umělců
   useEffect(() => {
+    console.log(isFocused);
+    console.log(accessToken);
     AsyncStorage.getItem("access_token").then((res) => {
       setAccessToken(res);
     });
 
     AsyncStorage.getItem("artists").then((res) => {
-      if (JSON.parse(res)) {
-        if (JSON.parse(res).length > 0) {
-          setArtists(JSON.parse(res).slice(0, 10));
-        } else {
-          setArtists(JSON.parse(res));
-        }
-
-        //Kontrola neuložených alb každého sledovaného umělce
-        JSON.parse(res).forEach((x) => {
-          axios({
-            method: "get",
-            url: api + "artists/" + x.id + "/albums?market=CZ",
-            headers: {
-              Authorization: "Basic " + accessToken,
-            },
-          }).then(function (response) {
-            if (
-              newAlbums.indexOf(x.id) === -1 &&
-              response.data.items //ids
-                .map((x) => x.id)
-                .filter(function (item) {
-                  return !x.albums.includes(item);
-                }).length > 0
-            ) {
-              setNewAlbums([...newAlbums, x.id]);
-            }
-          }).catch((e) => {
-            console.log(e);
-          });
-        });
-      }
+      setArtists(JSON.parse(res));
     });
-
-    //Pokud nějaká nová přidat umělce do proměnné
-    if (newAlbums.length > 0) {
-      axios({
-        method: "get",
-        url: api + "artists?ids=" + newAlbums.join(),
-        headers: {
-          Authorization: "Bearer " + accessToken,
-        },
-      }).then(function (response) {
-        response.data.artists.forEach((x) => {
-          const obj = {
-            id: x.id,
-            name: x.name,
-            img: x.images[2].url,
-          };
-          if (newArtists.some((o) => o.id === x.id) !== true) {
-            setNewArtists([...newArtists, obj]);
-          }
-        });
-      }).catch((e) => {
-        console.log(e);
-      });
-    }
-  }, [newAlbums, accessToken]);
+  }, [accessToken]);
 
   useEffect(() => {
-    setNewAlbums([]);
-    setNewArtists([]);
+    //Získá alba všech umělců, které sleduji
+    if (artists.length > 0 && !gotAlbums) {
+      const array = [];
+      artists.map((x) => {
+        axios({
+          method: "get",
+          url: api + "artists/" + x.id + "/albums?market=CZ",
+          headers: {
+            Authorization: "Bearer " + accessToken,
+          },
+        }).then(function (response) {
+          const unique = [
+            ...new Map(
+              response.data.items.map((item) => [item["name"], item])
+            ).values(),
+          ];
+          if (
+            !(
+              JSON.stringify(artists.find((a) => a.id === x.id).albums) ===
+              JSON.stringify(unique.map((b) => b.id))
+            )
+          ) {
+            console.log(x.name);
+            setNewAlbums((n) => [...n, x]);
+          }
+
+          // console.log(
+          //   JSON.stringify(artists.find((a) => a.id === x.id).albums) ===
+          //     JSON.stringify(unique.map((b) => b.id))
+          // );
+        });
+      });
+      setGotAlbums(true);
+    }
+  }, [artists]);
+
+  useEffect(() => {
+    if (isFocused) {
+      setGotAlbums(false);
+      setAccessToken(null);
+    }
   }, [isFocused]);
 
   return (
@@ -118,7 +107,9 @@ export const MainPage = ({ navigation }) => {
           <Text
             id={item.id}
             key={index}
-            onPress={() => navigation.navigate("Umělec", { id: item.id }, setSearchText(""))}
+            onPress={() =>
+              navigation.navigate("Umělec", { id: item.id }, setSearchText(""))
+            }
           >
             {item.name}
           </Text>
@@ -128,7 +119,7 @@ export const MainPage = ({ navigation }) => {
       <View>
         <Text>Uložené</Text>
         <View>
-          {artists?.map((item, index) => (
+          {artists?.slice(0, 10).map((item, index) => (
             <ArtistCard key={index} item={item} navigation={navigation} />
           ))}
           <ArtistCard key="AddNew" navigation={navigation} />
@@ -138,7 +129,7 @@ export const MainPage = ({ navigation }) => {
       <View>
         <Text>Nová alba</Text>
         <View>
-          {newArtists?.map((item, index) => (
+          {newAlbums?.map((item, index) => (
             <ArtistCard key={index} item={item} navigation={navigation} />
           ))}
         </View>
