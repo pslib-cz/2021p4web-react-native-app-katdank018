@@ -26,6 +26,8 @@ export const MainPage = ({ navigation }) => {
         },
       }).then(function (response) {
         setResults(response.data.artists.items);
+      }).catch((e) => {
+        console.log(e);
       });
     } else {
       setResults([]);
@@ -65,6 +67,8 @@ export const MainPage = ({ navigation }) => {
             ) {
               setNewAlbums([...newAlbums, x.id]);
             }
+          }).catch((e) => {
+            console.log(e);
           });
         });
       }
@@ -89,6 +93,8 @@ export const MainPage = ({ navigation }) => {
             setNewArtists([...newArtists, obj]);
           }
         });
+      }).catch((e) => {
+        console.log(e);
       });
     }
   }, [newAlbums, accessToken]);
