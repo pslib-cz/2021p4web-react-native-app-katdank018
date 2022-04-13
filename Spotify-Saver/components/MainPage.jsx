@@ -118,7 +118,7 @@ export const MainPage = ({ navigation }) => {
           <Text
             id={item.id}
             key={index}
-            onPress={() => navigation.navigate("Umělec", { id: item.id })}
+            onPress={() => navigation.navigate("Umělec", { id: item.id }, setSearchText(""))}
           >
             {item.name}
           </Text>

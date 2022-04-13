@@ -1,12 +1,14 @@
-import { View, StyleSheet, TextInput } from "react-native";
+import { View, StyleSheet, TextInput, Button } from "react-native";
 import { useState, useEffect } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import ArtistCard from "./ArtistCard";
+import { useIsFocused } from "@react-navigation/native";
 
 export const AllArtists = ({ navigation }) => {
   const [artists, setArtists] = useState([]);
   const [searchText, setSearchText] = useState("");
   const [results, setResults] = useState([]);
+  const isFocused = useIsFocused();
 
   useEffect(() => {
     setResults(
@@ -14,6 +16,7 @@ export const AllArtists = ({ navigation }) => {
         return x.name.toLowerCase().includes(searchText.toLowerCase());
       })
     );
+
   }, [searchText, artists]);
 
   useEffect(() => {
@@ -21,10 +24,11 @@ export const AllArtists = ({ navigation }) => {
       setArtists(JSON.parse(await AsyncStorage.getItem("artists")));
     };
     GetArtists();
-  }, []);
+  }, [isFocused]);
 
   return (
     <View style={styles.container}>
+      <Button onPress={() => navigation.goBack()} title="Back" />
       <TextInput
         style={styles.search}
         placeholder="Hledat umělce..."

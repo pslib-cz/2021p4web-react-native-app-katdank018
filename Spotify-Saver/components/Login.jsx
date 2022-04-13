@@ -1,8 +1,14 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Button, StyleSheet, View } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { ResponseType, useAuthRequest } from "expo-auth-session";
-import { client_id } from "../configuration/spotifyConfig";
+import {
+  client_id,
+  redirect_uri_mobile,
+  redirect_uri_web,
+} from "../configuration/spotifyConfig";
+import * as Device from "expo-device";
+import * as WebBrowser from "expo-web-browser";
 
 const discovery = {
   authorizationEndpoint: "https://accounts.spotify.com/authorize",
@@ -10,7 +16,22 @@ const discovery = {
 };
 
 export const Login = ({ navigation }) => {
+  const [deviceEnum, setDeviceEnum] = useState(null);
   const artists = [];
+
+  const DeviceDetection = async () => {
+    return await Device.getDeviceTypeAsync();
+  };
+
+  useEffect(() => {
+    DeviceDetection().then((res) => {
+      setDeviceEnum(res);
+    });
+  }, []);
+
+  if (deviceEnum === 3) {
+    WebBrowser.maybeCompleteAuthSession();
+  }
 
   const [request, response, promptAsync] = useAuthRequest(
     {
@@ -18,7 +39,7 @@ export const Login = ({ navigation }) => {
       clientId: client_id,
       scopes: ["user-read-email", "playlist-modify-public"],
       usePKCE: false,
-      redirectUri: "exp://10.0.0.21:19000/",
+      redirectUri: deviceEnum === 3 ? redirect_uri_web : redirect_uri_mobile,
     },
     discovery
   );

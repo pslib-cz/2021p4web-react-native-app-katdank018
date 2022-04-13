@@ -101,6 +101,7 @@ export const ArtistPage = ({ route, navigation }) => {
   if (artist) {
     return (
       <ScrollView style={styles.container}>
+        <Button onPress={() => navigation.goBack()} title="Back" />
         <Image
           source={{ uri: artist.images[1].url }}
           style={{ width: 320, height: 320 }}
