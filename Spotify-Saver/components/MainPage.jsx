@@ -15,7 +15,6 @@ export const MainPage = ({ navigation }) => {
   const isFocused = useIsFocused();
   const [gotAlbums, setGotAlbums] = useState(false);
 
-  //Výsledky vyhledávání
   useEffect(() => {
     if (searchText !== "") {
       axios({
@@ -36,10 +35,7 @@ export const MainPage = ({ navigation }) => {
     }
   }, [searchText]);
 
-  //Výpis umělců
   useEffect(() => {
-    console.log(isFocused);
-    console.log(accessToken);
     AsyncStorage.getItem("access_token").then((res) => {
       setAccessToken(res);
     });
@@ -50,7 +46,6 @@ export const MainPage = ({ navigation }) => {
   }, [accessToken]);
 
   useEffect(() => {
-    //Získá alba všech umělců, které sleduji
     if (artists.length > 0 && !gotAlbums) {
       const array = [];
       artists.map((x) => {
@@ -72,14 +67,8 @@ export const MainPage = ({ navigation }) => {
               JSON.stringify(unique.map((b) => b.id))
             )
           ) {
-            console.log(x.name);
             setNewAlbums((n) => [...n, x]);
           }
-
-          // console.log(
-          //   JSON.stringify(artists.find((a) => a.id === x.id).albums) ===
-          //     JSON.stringify(unique.map((b) => b.id))
-          // );
         });
       });
       setGotAlbums(true);

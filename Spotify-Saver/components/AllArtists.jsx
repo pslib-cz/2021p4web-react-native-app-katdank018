@@ -16,7 +16,6 @@ export const AllArtists = ({ navigation }) => {
         return x.name.toLowerCase().includes(searchText.toLowerCase());
       })
     );
-
   }, [searchText, artists]);
 
   useEffect(() => {

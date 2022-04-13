@@ -27,40 +27,38 @@ export const ArtistPage = ({ route, navigation }) => {
       setSavedCurrent(JSON.parse(res).find((x) => x.id === route.params.id));
     });
 
-    //Artist
-    axios({
-      method: "get",
-      url: api + "artists/" + route.params.id,
-      headers: {
-        Authorization: "Bearer " + accessToken,
-      },
-    })
-      .then(function (response) {
-        setArtist(response.data);
+    if (accessToken) {
+      //Artist
+      axios({
+        method: "get",
+        url: api + "artists/" + route.params.id,
+        headers: {
+          Authorization: "Bearer " + accessToken,
+        },
       })
-      .catch((e) => {
-        console.log(e);
-      });
+        .then(function (response) {
+          setArtist(response.data);
+        })
+        .catch((e) => {
+          console.log(e);
+        });
 
-    //Albums
-    axios({
-      method: "get",
-      url: api + "artists/" + route.params.id + "/albums?market=CZ",
-      headers: {
-        Authorization: "Bearer " + accessToken,
-      },
-    })
-      .then(function (response) {
+      //Albums
+      axios({
+        method: "get",
+        url: api + "artists/" + route.params.id + "/albums?market=CZ",
+        headers: {
+          Authorization: "Bearer " + accessToken,
+        },
+      }).then(function (response) {
         const unique = [
           ...new Map(
             response.data.items.map((item) => [item["name"], item])
           ).values(),
         ];
         setAlbums(unique);
-      })
-      .catch((e) => {
-        console.log(e);
       });
+    }
   }, [accessToken]);
 
   useEffect(() => {}, [savedCurrent]);

@@ -11,8 +11,8 @@ export const AlbumCard = ({ item, saved, refresh }) => {
 
   const RemoveAlbum = async () => {
     const storage = JSON.parse(await AsyncStorage.getItem("artists"));
-    const index = storage.find(x => x.id == saved.id).albums.indexOf(item.id);
-    storage.find(x => x.id === saved.id).albums.splice(index, 1)
+    const index = storage.find((x) => x.id == saved.id).albums.indexOf(item.id);
+    storage.find((x) => x.id === saved.id).albums.splice(index, 1);
     await AsyncStorage.setItem("artists", JSON.stringify(storage));
     refresh();
   };
