@@ -11,6 +11,7 @@ import {
 } from "react-native";
 import { api } from "../configuration/spotifyConfig";
 import AlbumCard from "./AlbumCard";
+import { styles } from "../styles/Style";
 
 export const ArtistPage = ({ route, navigation }) => {
   const [accessToken, setAccessToken] = useState();
@@ -127,11 +128,5 @@ export const ArtistPage = ({ route, navigation }) => {
     return <View></View>;
   }
 };
-
-const styles = StyleSheet.create({
-  container: {
-    marginTop: 50,
-  },
-});
 
 export default ArtistPage;

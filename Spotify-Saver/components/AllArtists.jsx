@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import ArtistCard from "./ArtistCard";
 import { useIsFocused } from "@react-navigation/native";
+import { styles } from "../styles/Style";
 
 export const AllArtists = ({ navigation }) => {
   const [artists, setArtists] = useState([]);
@@ -42,17 +43,5 @@ export const AllArtists = ({ navigation }) => {
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    marginTop: 50,
-  },
-  search: {
-    borderWidth: 1,
-    margin: 20,
-    height: 50,
-    padding: 10,
-  },
-});
 
 export default AllArtists;

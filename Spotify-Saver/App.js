@@ -4,12 +4,14 @@ import { MainPage } from "./components/MainPage";
 import { Login } from "./components/Login";
 import { ArtistPage } from "./components/ArtistPage";
 import AllArtists from "./components/AllArtists";
+import { StatusBar } from "expo-status-bar";
 
 const Stack = createNativeStackNavigator();
 
 export default function App() {
   return (
     <NavigationContainer>
+      <StatusBar style="light" />
       <Stack.Navigator
         initialRouteName="Přihlášení"
         screenOptions={{ headerShown: false }}

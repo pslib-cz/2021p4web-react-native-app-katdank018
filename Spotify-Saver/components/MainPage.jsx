@@ -1,10 +1,12 @@
 import axios from "axios";
 import { useState, useEffect } from "react";
-import { StyleSheet, Text, TextInput, View, ScrollView } from "react-native";
+import { Text, TextInput, View, ScrollView } from "react-native";
 import { useIsFocused } from "@react-navigation/native";
 import { api } from "../configuration/spotifyConfig";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import ArtistCard from "./ArtistCard";
+import { styles } from "../styles/Style";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export const MainPage = ({ navigation }) => {
   const [searchText, setSearchText] = useState("");
@@ -47,7 +49,6 @@ export const MainPage = ({ navigation }) => {
 
   useEffect(() => {
     if (artists.length > 0 && !gotAlbums) {
-      const array = [];
       artists.map((x) => {
         axios({
           method: "get",
@@ -79,64 +80,65 @@ export const MainPage = ({ navigation }) => {
     if (isFocused) {
       setGotAlbums(false);
       setAccessToken(null);
+      setNewAlbums([]);
     }
   }, [isFocused]);
 
   return (
-    <ScrollView style={styles.container}>
-      {/* Searchbar */}
-      <View>
+    <SafeAreaView style={styles.container}>
+      <ScrollView>
+        {/* Searchbar */}
         <TextInput
-          style={styles.search}
+          style={results.length > 0 ? styles.searchbar_open : styles.searchbar}
           placeholder="Hledat umělce..."
           value={searchText}
           onChangeText={(text) => setSearchText(text)}
         ></TextInput>
-        {results.map((item, index) => (
-          <Text
-            id={item.id}
-            key={index}
-            onPress={() =>
-              navigation.navigate("Umělec", { id: item.id }, setSearchText(""))
-            }
-          >
-            {item.name}
-          </Text>
-        ))}
-      </View>
-      {/* Uložené */}
-      <View>
-        <Text>Uložené</Text>
+        {results.length > 0 ? (
+          <View style={styles.search_results}>
+            {results.map((item, index) => (
+              <Text
+                style={styles.result}
+                id={item.id}
+                key={index}
+                onPress={() =>
+                  navigation.navigate(
+                    "Umělec",
+                    { id: item.id },
+                    setSearchText("")
+                  )
+                }
+              >
+                {item.name}
+              </Text>
+            ))}
+          </View>
+        ) : (
+          <></>
+        )}
+
+        {/* Uložené */}
         <View>
-          {artists?.slice(0, 10).map((item, index) => (
-            <ArtistCard key={index} item={item} navigation={navigation} />
-          ))}
-          <ArtistCard key="AddNew" navigation={navigation} />
+          <Text>Uložené</Text>
+          <View>
+            {artists?.slice(0, 10).map((item, index) => (
+              <ArtistCard key={index} item={item} navigation={navigation} />
+            ))}
+            <ArtistCard key="AddNew" navigation={navigation} />
+          </View>
         </View>
-      </View>
-      {/* Nové */}
-      <View>
-        <Text>Nová alba</Text>
+        {/* Nové */}
         <View>
-          {newAlbums?.map((item, index) => (
-            <ArtistCard key={index} item={item} navigation={navigation} />
-          ))}
+          <Text>Nová alba</Text>
+          <View>
+            {newAlbums?.map((item, index) => (
+              <ArtistCard key={index} item={item} navigation={navigation} />
+            ))}
+          </View>
         </View>
-      </View>
-    </ScrollView>
+      </ScrollView>
+    </SafeAreaView>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    marginTop: 50,
-  },
-  search: {
-    borderWidth: 1,
-    margin: 20,
-    height: 50,
-    padding: 10,
-  },
-});
 
 export default MainPage;

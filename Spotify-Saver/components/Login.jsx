@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Button, StyleSheet, View } from "react-native";
+import { TouchableOpacity, Image, Text } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { ResponseType, useAuthRequest } from "expo-auth-session";
 import {
@@ -9,6 +9,8 @@ import {
 } from "../configuration/spotifyConfig";
 import * as Device from "expo-device";
 import * as WebBrowser from "expo-web-browser";
+import { styles } from "../styles/Style";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const discovery = {
   authorizationEndpoint: "https://accounts.spotify.com/authorize",
@@ -65,22 +67,16 @@ export const Login = ({ navigation }) => {
   }, [response]);
 
   return (
-    <View style={styles.container}>
-      <Button onPress={() => promptAsync()} title="Přihlásit se" />
-    </View>
+    <SafeAreaView style={styles.container}>
+      <Image
+        style={styles.login_animation}
+        source={require("../assets/log_anim_640.gif")}
+      />
+      <TouchableOpacity style={styles.login_button} onPress={() => promptAsync()}>
+        <Text style={styles.login_btn_txt}>Přihlásit se</Text>
+      </TouchableOpacity>
+    </SafeAreaView>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    marginTop: 50,
-  },
-  search: {
-    borderWidth: 1,
-    margin: 20,
-    height: 50,
-    padding: 10,
-  },
-});
 
 export default Login;

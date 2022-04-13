@@ -1,4 +1,5 @@
 import { TouchableHighlight, Text, Image, View } from "react-native";
+import { styles } from "../styles/Style";
 
 export const ArtistCard = ({ item, navigation }) => {
   if (item !== undefined) {

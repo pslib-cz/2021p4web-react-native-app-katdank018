@@ -1,5 +1,6 @@
 import { View, Text, Image, Button } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { styles } from "../styles/Style";
 
 export const AlbumCard = ({ item, saved, refresh }) => {
   const SaveAlbum = async () => {
