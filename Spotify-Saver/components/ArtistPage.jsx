@@ -1,19 +1,14 @@
 import axios from "axios";
 import { useState, useEffect } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import {
-  StyleSheet,
-  Image,
-  Text,
-  Button,
-  ScrollView,
-  View,
-} from "react-native";
+import { Image, Text, TouchableOpacity, ScrollView, View } from "react-native";
 import { api } from "../configuration/spotifyConfig";
 import AlbumCard from "./AlbumCard";
 import { styles } from "../styles/Style";
+import { SafeAreaView } from "react-native-safe-area-context";
+import Svg, { Path } from "react-native-svg";
 
-export const ArtistPage = ({ route, navigation }) => {
+export const ArtistPage = ({ route }) => {
   const [accessToken, setAccessToken] = useState();
   const [artist, setArtist] = useState();
   const [albums, setAlbums] = useState([]);
@@ -76,9 +71,10 @@ export const ArtistPage = ({ route, navigation }) => {
     const savingArtist = {
       id: route.params.id,
       name: artist.name,
-      img: artist.images[2].url,
+      img: artist.images.reverse().find((x) => x.height > 130).url,
       albums: [],
     };
+
     const data = JSON.parse(await AsyncStorage.getItem("artists"));
     data.push(savingArtist);
     await AsyncStorage.setItem("artists", JSON.stringify(data));
@@ -99,30 +95,70 @@ export const ArtistPage = ({ route, navigation }) => {
 
   if (artist) {
     return (
-      <ScrollView style={styles.container}>
-        <Button onPress={() => navigation.goBack()} title="Back" />
-        <Image
-          source={{ uri: artist.images[1].url }}
-          style={{ width: 320, height: 320 }}
-        />
-        <Text>{artist.name}</Text>
-        {savedCurrent ? (
-          <Button onPress={() => RemoveArtist()} title="Přestat sledovat" />
-        ) : (
-          <Button onPress={() => SaveArtist()} title="Sledovat" />
-        )}
-
-        <View>
-          {albums.map((item, index) => (
-            <AlbumCard
-              key={index}
-              item={item}
-              saved={savedCurrent}
-              refresh={GetSavedCurrent}
+      <SafeAreaView style={styles.container}>
+        <ScrollView>
+          <View style={styles.artist_image_container}>
+            <Image
+              source={{ uri: artist.images[1].url }}
+              style={styles.artist_image}
             />
-          ))}
-        </View>
-      </ScrollView>
+          </View>
+          <View style={styles.artist_name_container}>
+            <Text
+              style={styles.artist_name}
+              numberOfLines={1}
+              ellipsizeMode="tail"
+            >
+              {artist.name}
+            </Text>
+            {savedCurrent ? (
+              <TouchableOpacity
+                style={styles.artist_button_warning}
+                onPress={() => RemoveArtist()}
+              >
+                <Svg
+                  style={styles.artist_button_svg}
+                  width={24}
+                  height={24}
+                  viewBox="0 0 24 24"
+                >
+                  <Path
+                    d="M12 18C12 19 12.25 19.92 12.67 20.74L12 21.35L10.55 20.03C5.4 15.36 2 12.27 2 8.5C2 5.41 4.42 3 7.5 3C9.24 3 10.91 3.81 12 5.08C13.09 3.81 14.76 3 16.5 3C19.58 3 22 5.41 22 8.5C22 9.93 21.5 11.26 20.62 12.61C19.83 12.23 18.94 12 18 12C14.69 12 12 14.69 12 18M14 17V19H22V17H14Z"
+                    fill="#1C2541"
+                  />
+                </Svg>
+              </TouchableOpacity>
+            ) : (
+              <TouchableOpacity
+                style={styles.artist_button_success}
+                onPress={() => SaveArtist()}
+              >
+                <Svg
+                  style={styles.artist_button_svg}
+                  width={24}
+                  height={24}
+                  viewBox="0 0 24 24"
+                >
+                  <Path
+                    d="M12 18C12 19 12.25 19.92 12.67 20.74L12 21.35L10.55 20.03C5.4 15.36 2 12.27 2 8.5C2 5.41 4.42 3 7.5 3C9.24 3 10.91 3.81 12 5.08C13.09 3.81 14.76 3 16.5 3C19.58 3 22 5.41 22 8.5C22 9.93 21.5 11.26 20.62 12.61C19.83 12.23 18.94 12 18 12C14.69 12 12 14.69 12 18M19 14H17V17H14V19H17V22H19V19H22V17H19V14Z"
+                    fill="#1C2541"
+                  />
+                </Svg>
+              </TouchableOpacity>
+            )}
+          </View>
+          <View style={styles.artist_albums_container}>
+            {albums.map((item, index) => (
+              <AlbumCard
+                key={index}
+                item={item}
+                saved={savedCurrent}
+                refresh={GetSavedCurrent}
+              />
+            ))}
+          </View>
+        </ScrollView>
+      </SafeAreaView>
     );
   } else {
     return <View></View>;

@@ -16,10 +16,26 @@ export default function App() {
         initialRouteName="Přihlášení"
         screenOptions={{ headerShown: false }}
       >
-        <Stack.Screen name="Spotify Saver" component={MainPage} />
-        <Stack.Screen name="Přihlášení" component={Login} />
-        <Stack.Screen name="Umělec" component={ArtistPage} />
-        <Stack.Screen name="Všichni umělci" component={AllArtists} />
+        <Stack.Screen
+          name="Spotify Saver"
+          component={MainPage}
+          options={{ presentation: "transparentModal" }}
+        />
+        <Stack.Screen
+          name="Přihlášení"
+          component={Login}
+          options={{ presentation: "transparentModal" }}
+        />
+        <Stack.Screen
+          name="Umělec"
+          component={ArtistPage}
+          options={{ presentation: "transparentModal" }}
+        />
+        <Stack.Screen
+          name="Všichni umělci"
+          component={AllArtists}
+          options={{ presentation: "transparentModal" }}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );

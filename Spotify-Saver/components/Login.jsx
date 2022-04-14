@@ -67,12 +67,15 @@ export const Login = ({ navigation }) => {
   }, [response]);
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={styles.login_container}>
       <Image
         style={styles.login_animation}
         source={require("../assets/log_anim_640.gif")}
       />
-      <TouchableOpacity style={styles.login_button} onPress={() => promptAsync()}>
+      <TouchableOpacity
+        style={styles.login_button}
+        onPress={() => promptAsync()}
+      >
         <Text style={styles.login_btn_txt}>Přihlásit se</Text>
       </TouchableOpacity>
     </SafeAreaView>
