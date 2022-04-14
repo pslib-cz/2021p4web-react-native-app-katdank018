@@ -181,7 +181,11 @@ export const MainPage = ({ navigation }) => {
             {artists?.slice(0, 10).map((item, index) => (
               <ArtistCard key={index} item={item} navigation={navigation} />
             ))}
-            <ArtistCard key="AddNew" navigation={navigation} />
+            {artists.length !== 0 ? (
+              <ArtistCard key="AddNew" navigation={navigation} />
+            ) : (
+              <></>
+            )}
           </ScrollView>
 
           {/* Nové */}
