@@ -6,7 +6,6 @@ import {
   View,
   ScrollView,
   TouchableOpacity,
-  BackHandler,
 } from "react-native";
 import { useIsFocused } from "@react-navigation/native";
 import { api } from "../configuration/spotifyConfig";
@@ -45,7 +44,7 @@ export const MainPage = ({ navigation }) => {
     } else {
       setResults([]);
     }
-  }, [searchText]);
+  }, [searchText, setSearchText]);
 
   useEffect(() => {
     AsyncStorage.getItem("access_token").then((res) => {
@@ -99,16 +98,6 @@ export const MainPage = ({ navigation }) => {
       setAccessToken(null);
       setNewAlbums([]);
     }
-
-    const backAction = () => {
-      BackHandler.exitApp();
-    };
-
-    const backHandler = BackHandler.addEventListener(
-      "hardwareBackPress",
-      backAction
-    );
-    return () => backHandler.remove();
   }, [isFocused]);
 
   return (

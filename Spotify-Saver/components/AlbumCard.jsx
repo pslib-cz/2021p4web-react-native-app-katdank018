@@ -30,8 +30,8 @@ export const AlbumCard = ({ item, saved, refresh }) => {
   return (
     <View style={styles.album_card}>
       <Image
-        source={{ uri: item.images[2].url }}
-        style={{ width: 80, height: 80 }}
+        source={{ uri: item.images[0].url }}
+        style={styles.list_card_image}
       />
       <View>
         <Text

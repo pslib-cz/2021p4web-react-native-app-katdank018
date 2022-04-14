@@ -71,7 +71,7 @@ export const ArtistPage = ({ route }) => {
     const savingArtist = {
       id: route.params.id,
       name: artist.name,
-      img: artist.images.reverse().find((x) => x.height > 130).url,
+      img: artist.images[0].url,
       albums: [],
     };
 
@@ -99,7 +99,7 @@ export const ArtistPage = ({ route }) => {
         <ScrollView>
           <View style={styles.artist_image_container}>
             <Image
-              source={{ uri: artist.images[1].url }}
+              source={{ uri: artist.images[0].url }}
               style={styles.artist_image}
             />
           </View>
