@@ -14,7 +14,7 @@ export default function App() {
 
   return (
     <NavigationContainer>
-      <StatusBar style="light" />
+      <StatusBar style="light" backgroundColor="#0B132B"/>
       <Stack.Navigator
         initialRouteName="Přihlášení"
         screenOptions={{ headerShown: false }}

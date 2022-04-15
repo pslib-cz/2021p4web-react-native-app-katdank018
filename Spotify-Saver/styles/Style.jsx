@@ -1,4 +1,4 @@
-import { StyleSheet } from "react-native";
+import { StyleSheet, Dimensions } from "react-native";
 
 const Pink = "#e834ec";
 const DarkBlue = "#0B132B";
@@ -8,6 +8,10 @@ const Success = "#29AB87";
 const Warning = "#FF4F4F";
 const White = "#FFFFFF";
 const BluedWhite = "#bcd4e6";
+
+const window = Dimensions.get("window");
+const screen = Dimensions.get("screen");
+console.log(screen.width/1.5);
 
 export const styles = StyleSheet.create({
   container: {
@@ -61,7 +65,7 @@ export const styles = StyleSheet.create({
     alignSelf: "center",
     alignItems: "center",
     justifyContent: "center",
-    marginTop: 150,
+    marginTop: screen.height / 6,
     borderRadius: 25,
   },
   login_btn_txt: {
@@ -166,7 +170,7 @@ export const styles = StyleSheet.create({
     padding: 5,
     paddingLeft: 10,
     fontSize: 18,
-    width: 300,
+    width: screen.width/1.5,
   },
   list_card_albums: {
     color: BluedWhite,
@@ -181,10 +185,12 @@ export const styles = StyleSheet.create({
     backgroundColor: LighterBlue,
     margin: 30,
     borderRadius: 5,
+    width: screen.width - 60,
+    justifyContent: "center",
   },
   artist_image: {
-    width: 320,
-    height: 320,
+    width: screen.width - 60 - 20,
+    height: screen.width - 60 - 20,
     alignSelf: "center",
     borderRadius: 5,
     marginVertical: 15,
@@ -192,13 +198,13 @@ export const styles = StyleSheet.create({
   },
   artist_name_container: {
     flexDirection: "row",
-    width: 320,
+    width: screen.width - 60 - 20,
   },
   artist_name: {
     color: BluedWhite,
     fontSize: 30,
     textAlign: "center",
-    width: 300,
+    width: screen.width - 100,
     marginHorizontal: 30,
   },
   artist_button_success: {
@@ -207,6 +213,7 @@ export const styles = StyleSheet.create({
     borderRadius: 50,
     position: "relative",
     left: -20,
+    height: 40,
   },
   artist_button_warning: {
     backgroundColor: Warning,
@@ -214,6 +221,7 @@ export const styles = StyleSheet.create({
     borderRadius: 50,
     position: "relative",
     left: -20,
+    height: 40,
   },
   artist_albums_container: {
     marginTop: 20,
@@ -233,7 +241,7 @@ export const styles = StyleSheet.create({
     padding: 5,
     paddingLeft: 10,
     fontSize: 18,
-    width: 250,
+    width: screen.width/1.5 - 30,
   },
   album_button_success: {
     backgroundColor: Success,
