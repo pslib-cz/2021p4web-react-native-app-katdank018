@@ -28,6 +28,7 @@ export const MainPage = ({ navigation }) => {
 
   useEffect(() => {
     if (searchText !== "" && accessToken) {
+      setHiddenResults(false);
       axios({
         method: "get",
         url: api + "search?q=" + searchText + "&type=artist&limit=3",
@@ -111,7 +112,7 @@ export const MainPage = ({ navigation }) => {
       >
         <ScrollView stickyHeaderIndices={[0]}>
           <View style={styles.sticky_view}>
-            <View style={styles.search}>
+            <View style={styles.search} >
               {/* Searchbar */}
               <TextInput
                 style={
@@ -150,7 +151,7 @@ export const MainPage = ({ navigation }) => {
                     ellipsizeMode="tail"
                     onPress={() =>
                       navigation.navigate(
-                        "Umělec",
+                        "Detail",
                         { id: item.id },
                         setSearchText("")
                       )

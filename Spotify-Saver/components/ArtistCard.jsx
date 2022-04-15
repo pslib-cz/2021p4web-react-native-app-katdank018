@@ -7,7 +7,7 @@ export const ArtistCard = ({ item, navigation }) => {
     return (
       <TouchableOpacity
         style={styles.artist_card_container}
-        onPress={() => navigation.navigate("Umělec", { id: item.id })}
+        onPress={() => navigation.navigate("Detail", { id: item.id })}
       >
         <View>
           <Image source={{ uri: item.img }} style={styles.artist_card_image} />
@@ -25,7 +25,7 @@ export const ArtistCard = ({ item, navigation }) => {
     return (
       <TouchableOpacity
         style={styles.artist_card_container}
-        onPress={() => navigation.navigate("Všichni umělci")}
+        onPress={() => navigation.navigate("Uloženo")}
       >
         <View>
           <View style={styles.artist_card_image_container}>

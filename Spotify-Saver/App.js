@@ -17,7 +17,7 @@ export default function App() {
         screenOptions={{ headerShown: false }}
       >
         <Stack.Screen
-          name="Spotify Saver"
+          name="Hlavní stránka"
           component={MainPage}
           options={{ presentation: "transparentModal" }}
         />
@@ -27,12 +27,12 @@ export default function App() {
           options={{ presentation: "transparentModal" }}
         />
         <Stack.Screen
-          name="Umělec"
+          name="Detail"
           component={ArtistPage}
           options={{ presentation: "transparentModal" }}
         />
         <Stack.Screen
-          name="Všichni umělci"
+          name="Uloženo"
           component={AllArtists}
           options={{ presentation: "transparentModal" }}
         />

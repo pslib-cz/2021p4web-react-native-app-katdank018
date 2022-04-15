@@ -5,7 +5,7 @@ export const ListObject = ({ item, navigation }) => {
   return (
     <TouchableOpacity
       style={styles.list_card_container}
-      onPress={() => navigation.navigate("Umělec", { id: item.id })}
+      onPress={() => navigation.navigate("Detail", { id: item.id })}
     >
       <View style={styles.list_card_view}>
         <Image source={{ uri: item.img }} style={styles.list_card_image} />

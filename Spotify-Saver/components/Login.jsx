@@ -62,7 +62,7 @@ export const Login = ({ navigation }) => {
   useEffect(() => {
     if (response?.type === "success") {
       SaveAccessToken(response.params.access_token);
-      navigation.navigate("Spotify Saver");
+      navigation.navigate("Hlavní stránka");
     }
   }, [response]);
 
@@ -70,7 +70,7 @@ export const Login = ({ navigation }) => {
     <SafeAreaView style={styles.login_container}>
       <Image
         style={styles.login_animation}
-        source={require("../assets/log_anim_640.gif")}
+        source={require("../assets/login_animation.gif")}
       />
       <TouchableOpacity
         style={styles.login_button}

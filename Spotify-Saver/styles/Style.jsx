@@ -1,9 +1,6 @@
 import { StyleSheet } from "react-native";
 
-//Login
-const Blue = "#090446";
-const Pink = "#C2095A";
-
+const Pink = "#e834ec";
 const DarkBlue = "#0B132B";
 const LighterBlue = "#1C2541";
 const LightBlue = "#3A506B";
@@ -24,7 +21,7 @@ export const styles = StyleSheet.create({
     marginTop: 20,
     borderRadius: 25,
     paddingLeft: 20,
-    paddingRight:45,
+    paddingRight: 45,
     borderColor: LighterBlue,
     borderWidth: 2,
     color: White,
@@ -49,7 +46,7 @@ export const styles = StyleSheet.create({
   //Login
   login_container: {
     flex: 1,
-    backgroundColor: Blue,
+    backgroundColor: DarkBlue,
   },
   login_animation: {
     marginTop: 100,
@@ -68,7 +65,7 @@ export const styles = StyleSheet.create({
     borderRadius: 25,
   },
   login_btn_txt: {
-    color: White,
+    color: DarkBlue,
     fontSize: 18,
   },
 
@@ -79,7 +76,7 @@ export const styles = StyleSheet.create({
     marginHorizontal: 20,
     marginTop: 20,
     paddingLeft: 20,
-    paddingRight:45,
+    paddingRight: 45,
     borderColor: LighterBlue,
     borderWidth: 2,
     color: White,
