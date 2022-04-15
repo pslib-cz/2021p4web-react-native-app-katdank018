@@ -58,7 +58,7 @@ export const MainPage = ({ navigation }) => {
   }, [accessToken]);
 
   useEffect(() => {
-    if (artists.length > 0 && !gotAlbums) {
+    if (artists?.length > 0 && !gotAlbums) {
       artists.map((x) => {
         axios({
           method: "get",

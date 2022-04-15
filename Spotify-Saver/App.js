@@ -5,10 +5,13 @@ import { Login } from "./components/Login";
 import { ArtistPage } from "./components/ArtistPage";
 import AllArtists from "./components/AllArtists";
 import { StatusBar } from "expo-status-bar";
+import * as NavigationBar from 'expo-navigation-bar';
 
 const Stack = createNativeStackNavigator();
 
 export default function App() {
+  NavigationBar.setBackgroundColorAsync("#0B132B");
+
   return (
     <NavigationContainer>
       <StatusBar style="light" />

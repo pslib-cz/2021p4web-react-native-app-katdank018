@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
 import { TouchableOpacity, Image, Text } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { ResponseType, useAuthRequest } from "expo-auth-session";
 import {
-  client_id,
-  redirect_uri_mobile,
-  redirect_uri_web,
-} from "../configuration/spotifyConfig";
+  ResponseType,
+  useAuthRequest,
+  makeRedirectUri,
+} from "expo-auth-session";
+import { client_id } from "../configuration/spotifyConfig";
 import * as Device from "expo-device";
 import * as WebBrowser from "expo-web-browser";
 import { styles } from "../styles/Style";
@@ -41,7 +41,7 @@ export const Login = ({ navigation }) => {
       clientId: client_id,
       scopes: ["user-read-email", "playlist-modify-public"],
       usePKCE: false,
-      redirectUri: deviceEnum === 3 ? redirect_uri_web : redirect_uri_mobile,
+      redirectUri: makeRedirectUri({ native: "spotify-saver://" }),
     },
     discovery
   );
