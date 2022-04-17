@@ -7,6 +7,7 @@ import {
   ScrollView,
   TouchableOpacity,
   FlatList,
+  Keyboard,
 } from "react-native";
 import { useIsFocused } from "@react-navigation/native";
 import { api } from "../configuration/spotifyConfig";
@@ -101,6 +102,8 @@ export const MainPage = ({ navigation }) => {
       setAccessToken(null);
       setNewAlbums([]);
     }
+    setSearchText("");
+    Keyboard.dismiss();
   }, [isFocused]);
 
   const renderItem = ({ item }) => (
@@ -154,13 +157,7 @@ export const MainPage = ({ navigation }) => {
                   key={index}
                   numberOfLines={1}
                   ellipsizeMode="tail"
-                  onPress={() =>
-                    navigation.navigate(
-                      "Detail",
-                      { id: item.id },
-                      setSearchText("")
-                    )
-                  }
+                  onPress={() => navigation.navigate("Detail", { id: item.id })}
                 >
                   {item.name}
                 </Text>
@@ -179,7 +176,7 @@ export const MainPage = ({ navigation }) => {
           >
             <Path
               d="M12,21.35L10.55,20.03C5.4,15.36 2,12.27 2,8.5C2,5.41 4.42,3 7.5,3C9.24,3 10.91,3.81 12,5.08C13.09,3.81 14.76,3 16.5,3C19.58,3 22,5.41 22,8.5C22,12.27 18.6,15.36 13.45,20.03L12,21.35Z"
-              fill="#3A506B" //3A506B
+              fill="#3A506B"
             />
           </Svg>
         </View>
@@ -205,12 +202,16 @@ export const MainPage = ({ navigation }) => {
           >
             <Path
               d="M23,12L20.56,9.22L20.9,5.54L17.29,4.72L15.4,1.54L12,3L8.6,1.54L6.71,4.72L3.1,5.53L3.44,9.21L1,12L3.44,14.78L3.1,18.47L6.71,19.29L8.6,22.47L12,21L15.4,22.46L17.29,19.28L20.9,18.46L20.56,14.78L23,12M13,17H11V15H13V17M13,13H11V7H13V13Z"
-              fill="#3A506B" //3A506B
+              fill="#3A506B"
             />
           </Svg>
         </View>
       </TouchableOpacity>
-      <FlatList data={newAlbums} renderItem={renderItem} />
+      <FlatList
+        style={styles.flatlist}
+        data={newAlbums}
+        renderItem={renderItem}
+      />
     </SafeAreaView>
   );
 };

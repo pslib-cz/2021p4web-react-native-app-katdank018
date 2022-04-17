@@ -148,14 +148,22 @@ export const ArtistPage = ({ route }) => {
             )}
           </View>
           <View style={styles.artist_albums_container}>
-            {albums.map((item, index) => (
-              <AlbumCard
-                key={index}
-                item={item}
-                saved={savedCurrent}
-                refresh={GetSavedCurrent}
-              />
-            ))}
+            {albums
+              ?.sort((a, b) =>
+                a.release_date < b.release_date
+                  ? 1
+                  : b.release_date < a.release_date
+                  ? -1
+                  : 0
+              )
+              .map((item, index) => (
+                <AlbumCard
+                  key={index}
+                  item={item}
+                  saved={savedCurrent}
+                  refresh={GetSavedCurrent}
+                />
+              ))}
           </View>
         </ScrollView>
       </SafeAreaView>

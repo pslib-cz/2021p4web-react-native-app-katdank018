@@ -9,9 +9,7 @@ const Warning = "#FF4F4F";
 const White = "#FFFFFF";
 const BluedWhite = "#bcd4e6";
 
-const window = Dimensions.get("window");
 const screen = Dimensions.get("screen");
-console.log(screen.width / 1.5);
 
 export const styles = StyleSheet.create({
   container: {
@@ -45,6 +43,9 @@ export const styles = StyleSheet.create({
     right: 35,
     top: 34,
     zIndex: 1,
+  },
+  flatlist: {
+    marginBottom: 20,
   },
 
   //Login
@@ -230,7 +231,7 @@ export const styles = StyleSheet.create({
     height: 40,
   },
   artist_albums_container: {
-    marginTop: 20,
+    marginVertical: 20,
   },
 
   //AlbumCard
