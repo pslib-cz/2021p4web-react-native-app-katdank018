@@ -11,7 +11,7 @@ const BluedWhite = "#bcd4e6";
 
 const window = Dimensions.get("window");
 const screen = Dimensions.get("screen");
-console.log(screen.width/1.5);
+console.log(screen.width / 1.5);
 
 export const styles = StyleSheet.create({
   container: {
@@ -110,6 +110,7 @@ export const styles = StyleSheet.create({
     color: White,
     marginLeft: 20,
     marginTop: 20,
+    marginBottom: 10,
     fontSize: 24,
   },
   main_saved_container: {
@@ -170,7 +171,7 @@ export const styles = StyleSheet.create({
     padding: 5,
     paddingLeft: 10,
     fontSize: 18,
-    width: screen.width/1.5,
+    width: screen.width / 1.5,
   },
   list_card_albums: {
     color: BluedWhite,
@@ -187,6 +188,9 @@ export const styles = StyleSheet.create({
     borderRadius: 5,
     width: screen.width - 60,
     justifyContent: "center",
+    maxWidth: 350,
+    maxHeight: 350,
+    alignSelf: "center",
   },
   artist_image: {
     width: screen.width - 60 - 20,
@@ -195,6 +199,8 @@ export const styles = StyleSheet.create({
     borderRadius: 5,
     marginVertical: 15,
     padding: 10,
+    maxWidth: 320,
+    maxHeight: 320,
   },
   artist_name_container: {
     flexDirection: "row",
@@ -241,7 +247,7 @@ export const styles = StyleSheet.create({
     padding: 5,
     paddingLeft: 10,
     fontSize: 18,
-    width: screen.width/1.5 - 30,
+    width: screen.width / 1.5 - 30,
   },
   album_button_success: {
     backgroundColor: Success,
