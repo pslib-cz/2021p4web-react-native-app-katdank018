@@ -13,6 +13,7 @@ export const ArtistPage = ({ route }) => {
   const [artist, setArtist] = useState();
   const [albums, setAlbums] = useState([]);
   const [savedCurrent, setSavedCurrent] = useState();
+  const [offset, setOffset] = useState(0);
 
   useEffect(() => {
     AsyncStorage.getItem("access_token").then((res) => {
@@ -39,10 +40,20 @@ export const ArtistPage = ({ route }) => {
           console.log(e);
         });
 
+      function selectData(show) {
+        const { id, name, images, release_date } = show;
+        return { id, name, images, release_date };
+      }
+
       //Albums
       axios({
         method: "get",
-        url: api + "artists/" + route.params.id + "/albums?market=CZ",
+        url:
+          api +
+          "artists/" +
+          route.params.id +
+          "/albums?include_groups=album%2Csingle&market=CZ&limit=50&offset=" +
+          offset,
         headers: {
           Authorization: "Bearer " + accessToken,
         },
@@ -52,10 +63,15 @@ export const ArtistPage = ({ route }) => {
             response.data.items.map((item) => [item["name"], item])
           ).values(),
         ];
-        setAlbums(unique);
+        const res = unique.map(selectData);
+        setAlbums(albums.concat(res));
+
+        if (response.data.next != null) {
+          setOffset(offset + 50);
+        }
       });
     }
-  }, [accessToken]);
+  }, [accessToken, offset]);
 
   useEffect(() => {}, [savedCurrent]);
 
