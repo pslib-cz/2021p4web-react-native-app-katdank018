@@ -62,39 +62,41 @@ export const MainPage = ({ navigation }) => {
   useEffect(() => {
     if (artists?.length > 0 && !gotAlbums) {
       artists.map((x) => {
-        var r = GetAlbums(
-          api +
+        if (newAlbums.find(e => e.id == x.id) === undefined) {
+          var r = GetAlbums(
+            api +
             "artists/" +
             x.id +
             "/albums?include_groups=album%2Csingle&market=CZ&limit=50&offset=0",
-          0,
-          x.id
-        ).then((res) => {
-          console.log(res);
-        });
+            0,
+            x.id
+          ).then((res) => {
+            console.log(res);
+            if (
+              !(
+                artists.find((a) => a.id === x.id).albums.length ===
+                res
+              )
+            ) {
+              const newArtist = {
+                albums: x.albums,
+                id: x.id,
+                img: x.img,
+                name: x.name,
+                count: res - x.albums.length,
+              };
+              setNewAlbums((n) => [...n, newArtist]);
+            }
+          });
+        }
       });
-
-      // if (
-      //   !(
-      //     artists.find((a) => a.id === artists[index].id).albums.length ===
-      //     currentLength
-      //   )
-      // ) {
-      //   const newArtist = {
-      //     albums: artists[index].albums,
-      //     id: artists[index].id,
-      //     img: artists[index].img,
-      //     name: artists[index].name,
-      //     count: currentLength - artists[index].albums.length,
-      //   };
-      //   setNewAlbums((n) => [...n, newArtist]);
-      // }
-    } else {
-      setGotAlbums(true);
     }
+    setGotAlbums(true);
+
   }, [artists]);
 
-  const GetAlbums = async (url, count, id) => {
+  const GetAlbums = async (url, count) => {
+    // console.log(count);
     const res = await axios({
       method: "get",
       url: url,
@@ -108,11 +110,11 @@ export const MainPage = ({ navigation }) => {
         ).values(),
       ];
       count = count + unique.length;
-      // count = count + unique.length;
       if (response.data.next != null) {
-        GetAlbums(response.data.next, count);
+        count = GetAlbums(response.data.next, count).then((r) => {
+          return r;
+        });
       }
-      // console.log(count);
       return count;
     });
     return await res;
@@ -231,11 +233,11 @@ export const MainPage = ({ navigation }) => {
           </Svg>
         </View>
       </TouchableOpacity>
-      {/* <FlatList
+      <FlatList
         style={styles.flatlist}
         data={newAlbums}
         renderItem={renderItem}
-      /> */}
+      />
     </SafeAreaView>
   );
 };
