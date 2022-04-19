@@ -231,7 +231,7 @@ export const styles = StyleSheet.create({
     height: 40,
   },
   artist_albums_container: {
-    marginVertical: 20,
+    marginBottom: 20,
   },
 
   //AlbumCard

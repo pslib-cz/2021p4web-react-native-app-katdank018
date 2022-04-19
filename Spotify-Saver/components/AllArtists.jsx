@@ -32,6 +32,23 @@ export const AllArtists = ({ navigation }) => {
     <ListObject item={item} navigation={navigation} />
   );
 
+  const renderHeader = () => (
+    <View style={styles.main_saved_new_container}>
+      <Text style={styles.main_saved_text}>Všichni uložení</Text>
+      <Svg
+        style={styles.main_saved_icon}
+        width={24}
+        height={24}
+        viewBox="0 0 24 24"
+      >
+        <Path
+          d="M15,6H3V8H15V6M15,10H3V12H15V10M3,16H11V14H3V16M17,6V14.18C16.69,14.07 16.35,14 16,14A3,3 0 0,0 13,17A3,3 0 0,0 16,20A3,3 0 0,0 19,17V8H22V6H17Z"
+          fill="#3A506B"
+        />
+      </Svg>
+    </View>
+  );
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.sticky_view}>
@@ -56,26 +73,13 @@ export const AllArtists = ({ navigation }) => {
           </Svg>
         </View>
       </View>
-      <View style={styles.main_saved_new_container}>
-        <Text style={styles.main_saved_text}>Všichni uložení</Text>
-        <Svg
-          style={styles.main_saved_icon}
-          width={24}
-          height={24}
-          viewBox="0 0 24 24"
-        >
-          <Path
-            d="M15,6H3V8H15V6M15,10H3V12H15V10M3,16H11V14H3V16M17,6V14.18C16.69,14.07 16.35,14 16,14A3,3 0 0,0 13,17A3,3 0 0,0 16,20A3,3 0 0,0 19,17V8H22V6H17Z"
-            fill="#3A506B"
-          />
-        </Svg>
-      </View>
       <FlatList
         style={styles.flatlist}
         data={results?.sort((a, b) =>
           a.name > b.name ? 1 : b.name > a.name ? -1 : 0
         )}
         renderItem={renderItem}
+        ListHeaderComponent={renderHeader}
       />
     </SafeAreaView>
   );
