@@ -63,13 +63,12 @@ export const MainPage = ({ navigation }) => {
     if (artists?.length > 0 && !gotAlbums) {
       artists.map((x) => {
         if (newAlbums.find(e => e.id == x.id) === undefined) {
-          var r = GetAlbums(
+          GetAlbums(
             api +
             "artists/" +
             x.id +
             "/albums?include_groups=album%2Csingle&market=CZ&limit=50&offset=0",
-            0,
-            x.id
+            0
           ).then((res) => {
             console.log(res);
             if (
@@ -96,7 +95,6 @@ export const MainPage = ({ navigation }) => {
   }, [artists]);
 
   const GetAlbums = async (url, count) => {
-    // console.log(count);
     const res = await axios({
       method: "get",
       url: url,
@@ -133,8 +131,6 @@ export const MainPage = ({ navigation }) => {
   const renderItem = ({ item }) => (
     <ListObject item={item} navigation={navigation} />
   );
-
-  // console.log(newAlbums);
 
   return (
     <SafeAreaView style={styles.container}>
