@@ -61,20 +61,15 @@ export const MainPage = ({ navigation }) => {
   useEffect(() => {
     if (artists?.length > 0 && !gotAlbums) {
       artists.map((x) => {
-        if (newAlbums.find(e => e.id == x.id) === undefined) {
+        if (newAlbums.find((e) => e.id == x.id) === undefined) {
           GetAlbums(
             api +
-            "artists/" +
-            x.id +
-            "/albums?include_groups=album%2Csingle&market=CZ&limit=50&offset=0",
+              "artists/" +
+              x.id +
+              "/albums?include_groups=album%2Csingle&market=CZ&limit=50&offset=0",
             0
           ).then((res) => {
-            if (
-              !(
-                artists.find((a) => a.id === x.id).albums.length ===
-                res
-              )
-            ) {
+            if (!(artists.find((a) => a.id === x.id).albums.length === res)) {
               const newArtist = {
                 albums: x.albums,
                 id: x.id,
@@ -128,7 +123,7 @@ export const MainPage = ({ navigation }) => {
     Keyboard.addListener("keyboardDidHide", () => {
       setHiddenResults(true);
     });
-  }, [])
+  }, []);
 
   const renderItem = ({ item }) => (
     <ListObject item={item} navigation={navigation} />
@@ -177,7 +172,7 @@ export const MainPage = ({ navigation }) => {
           />
         </Svg>
       </View>
-    </View >
+    </View>
   );
 
   return (
@@ -220,7 +215,10 @@ export const MainPage = ({ navigation }) => {
                 key={index}
                 numberOfLines={1}
                 ellipsizeMode="tail"
-                onPress={() => navigation.navigate("Detail", { id: item.id })}
+                onPress={() => {
+                  navigation.navigate("Detail", { id: item.id });
+                  Keyboard.dismiss();
+                }}
               >
                 {item.name}
               </Text>
