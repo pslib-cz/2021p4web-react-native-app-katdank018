@@ -111,11 +111,6 @@ export const MainPage = ({ navigation }) => {
   };
 
   useEffect(() => {
-    if (isFocused) {
-      setGotAlbums(false);
-      setAccessToken(null);
-      setNewAlbums([]);
-    }
     setSearchText("");
   }, [isFocused]);
 
